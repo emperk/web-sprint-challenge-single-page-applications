@@ -15,31 +15,132 @@ import { Route, Link, Switch } from 'react-router-dom';
 
 // import components for different routes
 
-// import data
+import OrderForm from "./components/OrderForm";
+import IndivOrder from "./components/IndivOrder"
+import Home from "./components/Home";
+import axios from "axios";
+import schema from "./validation/formSchema";
+import * as yup from "yup";
 
-function fetchStock() {
-  return Promise.resolve({ success: true, data })
-}
+// initial states //
+
+const initialFormValues = {
+  // text inputs //
+  orderName: "",
+  // dropdown //
+  pizzaSize: "",
+  // checkboxes FOR TOPPINGS // 
+  pepperoni: false,
+  cheese: false,
+  threeMeat: false,
+  pineapple: false,
+  // text inputs //
+  specialDeliveryInstructions: "",
+};
+
+const initialFormErrors = {
+  orderName: "",
+  pizzaSize: "",
+  specialDeliveryInstructions: "",
+};
+
+const initialOrders = [];
+const initialDisabled = true;
 
 export default function App(props) {
-  const [stock, setStock] = useState([])
+  const [orders, setOrders] = useState(initialOrders); // array of all the orders
+  const [formValues, setFormValues] = useState(initialFormValues);
+  const [formErrors, setFormErrors] = useState(initialFormErrors);
+  const [disabled, setDisabled] = useState(initialDisabled);
+
+  const getOrders = () => {
+    axios
+      .get("https://reqres.in/api/orders")
+      .then((res) => {
+        setOrders(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  };
+
+  const postNewOrder = (newOrder) => {
+    axios
+    .post("https://reqres.in/api/orders", newOrder)
+    .then((res) => {
+      setOrders([res.data, ...orders]);
+      setFormValues(initialFormValues);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  };
+
+  const inputChange = (name, value) => {
+    yup
+      .reach(schema, name) 
+      .validate(value)
+      .then(() => {
+        setFormErrors({
+          ...formErrors,
+          [name]: "",
+        });
+      })
+
+      .catch((err) => {
+        setFormErrors({
+          ...formErrors,
+          [name]: err.errors[0],
+        });
+      });
+    setFormValues({
+      ...formValues,
+      [name]: value, // not an array
+    });
+  };
+
+  const formSubmit = () => {
+    const newOrder = {
+      orderName: formValues.orderName.trim(),
+      pizzaSize: formValues.pizzaSize.trim(),
+      specialDeliveryInstructions: formValues.specialDeliveryInstructions.trim(),
+      toppings: ["pepperoni", "cheese", "threeMeat", "pineapple"].filter(
+        (topping) => formValues[topping]
+      ),
+    };
+    postNewOrder(newOrder);
+  };
+
+  // side effects //
 
   useEffect(() => {
-    fetchStock().then(res => setStock(res.data))
+    getOrders();
   }, [])
+
+  useEffect(() => {
+    schema.isValid(formValues).then((valid) => {
+      setDisabled(!valid);
+    });
+  }, [formValues]);
+
 
   return (
     <div className='App'>
       <nav>
         <h1>Lambda Eats</h1>
         <div className='nav-links'>
-          /* LINKS GO HERE */
+          <Link to='/'>Home</Link>
+          <Link to='/order-form'>Order Now!</Link>
         </div>
       </nav>
-
+    
       <Switch>
-        /* ROUTES GO HERE */
+        <Route path='/order-form/:itemID'>
+          
+        </Route> 
       </Switch>
+
+
     </div>
   )
 }

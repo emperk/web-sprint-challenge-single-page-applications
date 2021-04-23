@@ -1,12 +1,12 @@
 import React from 'react';
 
-const OrderForm = () => {
+const Home = () => {
 
     return (
         <div>
-            OrderForm
+            Home
         </div>
     )
 }
 
-export default OrderForm
+export default Home
