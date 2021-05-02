@@ -1,20 +1,18 @@
 import * as yup from "yup";
 
 export default yup.object().shape({
-  username: yup
+  orderName: yup
     .string()
-    .required("username is required")
-    .min(3, "username must be 3 chars long"),
-  email: yup
+    .required("A name is required for your order.")
+    .min(3, "Your order name must be 3 characters long."),
+  specialDeliveryInstructions: yup
+    .string(),
+  pizzaSize: yup
     .string()
-    .email("must be a valid email")
-    .required("email is required"),
-  role: yup
-    .string()
-    .oneOf(["tl", "instructor", "alumni", "student"], "role is required"),
-  civil: yup.string().oneOf(["married", "single"], "civil status is required"),
+    .oneOf(["extraLarge", "large", "medium", "personal"], "Please select a size for your pizza."),
   // we are done with checkboxes
-  coding: yup.boolean(),
-  hiking: yup.boolean(),
-  reading: yup.boolean(),
+  pepperoni: yup.boolean(),
+  cheese: yup.boolean(),
+  threeMeat: yup.boolean(),
+  pineapple: yup.boolean(),
 });

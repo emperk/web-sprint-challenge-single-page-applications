@@ -41,6 +41,33 @@
   }
 }
 
-.nav-links {
+h1 {
+  padding-left: 5%;
+  font-family: 'Satisfy', cursive;
+  font-size: 2.8em;
+}
+
+nav {
 
 }
+
+.nav-links {
+  width: 100%;
+}
+
+.home-link {
+
+}
+
+.orderNow-link {
+
+}
+
+img {
+  width: 100%;
+}
+
+button {
+  margin: 0% 45% 0% 45%;
+}
+

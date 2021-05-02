@@ -27,7 +27,7 @@ import * as yup from "yup";
 
 const initialFormValues = {
   // text inputs //
-  orderName: "Hawaiian",
+  orderName: "",
   // dropdown //
   pizzaSize: "",
   // checkboxes FOR TOPPINGS //
@@ -130,8 +130,8 @@ export default function App(props) {
         <h1>Lambda Eats</h1>
         <nav>
           <div className="nav-links">
-            <Link to="/">Home</Link>
-            <Link to="/pizza">Order Now!</Link>
+            <Link to="/" className="home-link">Home</Link>
+            <Link to="/pizza" className="orderNow-link">Order Now!</Link>
           </div>
         </nav>
       </div>
