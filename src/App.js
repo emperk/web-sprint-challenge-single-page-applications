@@ -21,6 +21,7 @@ import OrderForm from "./components/OrderForm";
 import IndividualOrder from "./components/IndividualOrder";
 import Home from "./components/Home"
 import schema from "./validation/formSchema"
+import "./App.css";
 //
 
 //initial states (form values)//
@@ -54,42 +55,86 @@ export default function App(props) {
   const [formErrors, setFormErrors] = useState(initialFormErrors);
   const [disabled, setDisabled] = useState(initialDisabled);
 
+  // const getOrders = () => {
+  //   axios
+  //     .get('https://reqres.in/api/orders')
+  //     .then((response) => {
+  //       setOrders(response.data);
+  //       console.log("Response Data from get orders: ", response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log("The Error: ", error);
+  //     });
+  // };
+
   const getOrders = () => {
     axios
-      .post('https://reqres.in/api/orders')
-      .then((response) => {
-        setOrders(response?.data?.data);
-        console.log("Response Data from get orders: ", response.data);
+      .get('https://reqres.in/api/orders')
+      .then(res => {
+        setOrders(res.data)
       })
-      .catch((error) => {
-        console.log("The Error: ", error);
-      });
-  };
+      .catch(err => {
+        console.log(err)
+      })
+  }
 
-  const postNewOrder = (newOrder) => {
-    axios
-      .post('https://reqres.in/api/orders', newOrder)
-      .then((response) => {
-        console.log("The Response in Post new order: ", response);
-        setOrders([response?.data, ...orders]);
-        setFormValues(initialFormValues);
+  // const postNewOrder = (newOrder) => {
+  //   axios
+  //     .post('https://reqres.in/api/orders', newOrder)
+  //     .then((response) => {
+  //       console.log("The Response in Post new order: ", response);
+  //       setOrders([response.data, ...orders]);
+  //       setFormValues(initialFormValues);
+  //     })
+  //     .catach((error) => {
+  //       console.log("The Error:", error);
+  //     });
+  // };
+
+  const postNewOrder = newOrder => {
+    axios.post('https://reqres.in/api/orders', newOrder)
+      .then(res => {
+        setOrders([res.data, ...orders])
       })
-      .catach((error) => {
-        console.log("The Error:", error);
-      });
-  };
+      .catch(err => {
+        console.log(err)
+      })
+      .finally(() => {
+        setFormValues(initialFormValues)
+      })
+  }
+
+
+  // const validate = (name, value) => {
+  //   yup
+  //     .reach(schema, name)
+  //     .validate(value)
+  //     .then(() => setFormErrors({...formErrors, [name]: ""}))
+  //     .catch((error) => 
+  //       setFormErrors({
+  //         ...formErrors, 
+  //           [name]: error.errors[0]
+  //       }))
+  // }
 
   const validate = (name, value) => {
-    yup
-      .reach(schema, name)
+    yup.reach(schema, name)
       .validate(value)
-      .then(() => setFormErrors({...formErrors, [name]: ""}))
-      .catch((error) => 
-        setFormErrors({
-          ...formErrors, 
-            [name]: error.errors[0]
-        }))
+      .then(() => setFormErrors({ ...formErrors, [name]: ''}))
+      .catch(err => 
+        setFormErrors({ 
+          ...formErrors, [
+            name]: err.errors[0]
+          }))
   }
+
+  // const inputChange = (name, value) => {
+  //   validate(name, value)
+  //   setFormValues({
+  //     ...formValues,
+  //     [name]: value
+  //   })
+  // };
 
   const inputChange = (name, value) => {
     validate(name, value)
@@ -97,22 +142,32 @@ export default function App(props) {
       ...formValues,
       [name]: value
     })
-  };
+  }
+
+  // const formSubmit = () => {
+  //   const newOrder = {
+  //     orderName: formValues.orderName.trim(),
+  //     specialInstructions: formValues.specialInstructions.trim(),
+  //     pizzaSize: formValues.pizzaSize.trim(),
+  //     toppings: ["pepperoni", "cheese", "threeMeat", "pineapple"].filter(
+  //       (topping) => formValues[topping]
+  //     ),
+  //   };
+  //   postNewOrder(newOrder);
+  // };
 
   const formSubmit = () => {
     const newOrder = {
       orderName: formValues.orderName.trim(),
       specialInstructions: formValues.specialInstructions.trim(),
       pizzaSize: formValues.pizzaSize.trim(),
-      toppings: ["pepperoni", "cheese", "threeMeat", "pineapple"].filter(
-        (topping) => formValues[topping]
-      ),
-    };
-    postNewOrder(newOrder);
-  };
+      toppings: ['pepperoni', 'cheese', 'threeMeat', 'pineapple'].filter(topping => formValues[topping])
+    }
+    postNewOrder(newOrder)
+  }
 
   useEffect(() => {
-    getOrders();
+    getOrders()
   }, [])
 
   useEffect(() => {

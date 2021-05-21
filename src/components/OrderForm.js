@@ -19,6 +19,15 @@ export default function OrderForm(props) {
     <form className="form container" onSubmit={onSubmit}>
       <h2>Build Your Own Pizza</h2>
       <div className="form-group pizza-size">
+        <h5>Order Name</h5>
+        <label>
+          <input 
+            type="text"
+            name="orderName"
+            value={values.orderName}
+            onChange={onChange}
+          />
+        </label>
         <h5>Choose Size</h5>
         <label>
           <select onChange={onChange} value={values.pizzaSize} name="pizzaSize">
@@ -87,9 +96,9 @@ export default function OrderForm(props) {
       <div className="form-group submit">
         <button disabled={disabled}>Submit My Order</button>
         <div className="errors">
-          <div></div>
-          <div></div>
-          <div></div>
+          <div>{errors.orderName}</div>
+          <div>{errors.pizzaSize}</div>
+          <div>{errors.specialInstructions}</div>
         </div>
       </div>
     </form>
